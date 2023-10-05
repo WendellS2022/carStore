@@ -1,10 +1,13 @@
 package br.com.carstore.DAO;
 
 import br.com.carstore.model.Car;
-
+import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class CarDAO {
 
@@ -32,6 +35,47 @@ public class CarDAO {
             System.out.println("fail in database connection");
 
         }
+    }
+    public List <Car> findAllCars() {
+
+        String SQL = "SELECT * FROM CAR";
+
+        try {
+
+            Connection connection = DriverManager.getConnection("jdbc:h2:~/test", "sa", "sa");
+
+            System.out.println("success in database connection");
+
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List cars = new ArrayList<>();
+
+            while (resultSet.next()) {
+
+                String carName = resultSet.getString("name");
+
+                Car car = new Car(carName);
+
+                cars.add(car);
+
+            }
+
+            System.out.println("success in select * car");
+
+            connection.close();
+
+            return cars;
+
+        } catch (Exception e) {
+
+            System.out.println("fail in database connection");
+
+            return Collections.emptyList();
+
+        }
+
     }
 }
 
